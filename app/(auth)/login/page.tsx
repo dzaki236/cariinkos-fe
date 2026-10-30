@@ -1,14 +1,19 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { appToast } from "@/components/ui/app-toast";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { status } = useSession();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+
+  useEffect(() => {
+    if (status === "authenticated") router.replace("/dashboard");
+  }, [router, status]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
