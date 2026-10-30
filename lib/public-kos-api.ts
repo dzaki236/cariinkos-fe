@@ -48,7 +48,9 @@ const DEFAULT_API_BASE_URL = "http://localhost:3000/api/v1";
 
 function getPublicApiUrl(path: string) {
     const baseUrl = (
-        process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_API_BASE_URL
+        process.env.API_BASE_URL ||
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        DEFAULT_API_BASE_URL
     ).replace(/\/+$/, "");
     return `${baseUrl}/${path.replace(/^\/+/, "")}`;
 }
@@ -62,15 +64,14 @@ async function request<T>(path: string, retryKey?: string): Promise<T> {
         response = retryKey
             ? await fetch(url, { cache: "no-store" })
             : await fetch(url, { next: { revalidate: 300 } });
-    } catch {
-        throw new PublicKosApiError("Layanan data kos tidak dapat dijangkau.");
+    } catch (error) {
+        const reason = error instanceof Error ? ` ${error.message}` : "";
+        throw new PublicKosApiError(`Layanan data kos tidak dapat dijangkau.${reason}`);
     }
 
     if (!response.ok) {
         throw new PublicKosApiError(
-            response.status === 404
-                ? "Kos tidak ditemukan."
-                : "Data kos gagal dimuat. Silakan coba lagi.",
+            `Data kos gagal dimuat (HTTP ${response.status}).`,
             response.status,
         );
     }
