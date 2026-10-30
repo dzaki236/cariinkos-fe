@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
             },
         ],
     },
-    cacheComponents: false,
+    cacheComponents: true,
     partialPrefetching: true,
     reactCompiler: true,
     allowedDevOrigins: ['62.171.163.24'],
