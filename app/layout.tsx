@@ -3,8 +3,8 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
-  title: "CariinKos | Pengelolaan Kos",
-  description: "Kelola data kos CariinKos.",
+  title: "CariinKos | Temukan Kos",
+  description: "Lihat informasi kos yang tersedia di CariinKos.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
