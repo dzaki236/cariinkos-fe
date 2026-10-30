@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import Link from "next/link";
 import { KosListing } from "@/components/public/kos-listing";
 import { PublicRetryLink } from "@/components/public/public-retry-link";
@@ -16,6 +17,7 @@ type HomeProps = {
 };
 
 export default async function Home({ searchParams }: HomeProps) {
+  await connection();
   const params = await searchParams;
   const requestedPage = Array.isArray(params.page) ? params.page[0] : params.page;
   const retryKey = Array.isArray(params.retry) ? params.retry[0] : params.retry;
