@@ -5,6 +5,8 @@ import { getApiBaseUrl } from "@/lib/auth";
 const allowed = [
     /^kos$/,
     /^kos\/[0-9a-f-]+$/i,
+    /^public\/kos$/,
+    /^public\/kos\/[0-9a-f-]+$/i,
     /^kos\/[0-9a-f-]+\/facilities$/i,
     /^kos\/[0-9a-f-]+\/facilities\/[0-9a-f-]+$/i,
     /^kos\/[0-9a-f-]+\/photos$/i,
