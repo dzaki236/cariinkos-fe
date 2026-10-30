@@ -34,7 +34,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        defaultOptions: { queries: { staleTime: 30_000, retry: 1 } },
+        defaultOptions: {
+          queries: { staleTime: 0, gcTime: 0, retry: 1 },
+        },
       }),
   );
 

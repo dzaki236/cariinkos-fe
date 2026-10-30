@@ -61,9 +61,7 @@ async function request<T>(path: string, retryKey?: string): Promise<T> {
 
     let response: Response;
     try {
-        response = retryKey
-            ? await fetch(url, { cache: "no-store" })
-            : await fetch(url, { next: { revalidate: 300 } });
+        response = await fetch(url, { cache: "no-store" });
     } catch (error) {
         const reason = error instanceof Error ? ` ${error.message}` : "";
         throw new PublicKosApiError(`Layanan data kos tidak dapat dijangkau.${reason}`);
