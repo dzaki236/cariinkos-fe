@@ -15,9 +15,10 @@ const nextConfig: NextConfig = {
             },
         ],
     },
-    cacheComponents: true,
+    cacheComponents: false,
     partialPrefetching: true,
     reactCompiler: true,
+    allowedDevOrigins: ['62.171.163.24'],
     turbopack: {
         rules: {
             "*.css": {

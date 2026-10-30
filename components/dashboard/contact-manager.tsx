@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useContact, useKos } from "@/lib/kos-data";
-import { apiRequest } from "@/lib/query-client";
+import { apiRequest, ApiError } from "@/lib/query-client";
 import { appToast } from "@/components/ui/app-toast";
 import { ConfirmAction } from "@/components/dashboard/confirm-action";
 
@@ -58,10 +58,11 @@ export function ContactManager({ id }: { id: string }) {
         Data kos gagal dimuat.
       </p>
     );
-  if (contact.isError && contact.error.status !== 404)
+  const contactError = contact.error as ApiError | null;
+  if (contact.isError && contactError?.status !== 404)
     return (
       <p className="error-message" role="alert">
-        {contact.error.message}
+        {contactError?.message}
         <button
           className="button button-quiet"
           onClick={() => contact.refetch()}
