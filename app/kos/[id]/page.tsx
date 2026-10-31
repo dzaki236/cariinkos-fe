@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { KosPhotoGallery } from "@/components/public/kos-photo-gallery";
 import { PublicRetryLink } from "@/components/public/public-retry-link";
 import {
   getPublicKos,
@@ -88,18 +88,7 @@ export default async function KosDetailPage({ params, searchParams }: KosPagePro
         </header>
 
         {kos.photos?.length ? (
-          <section className="kos-gallery" aria-label={`Foto ${kos.name}`}>
-            {kos.photos.map((photo, index) => (
-              <Image
-                key={photo.id}
-                src={photo.image_url}
-                alt={`Foto ${kos.name}, ${index + 1}`}
-                width={900}
-                height={620}
-                unoptimized
-              />
-            ))}
-          </section>
+          <KosPhotoGallery name={kos.name} photos={kos.photos} />
         ) : (
           <p className="kos-no-photos" role="status">Foto belum tersedia.</p>
         )}

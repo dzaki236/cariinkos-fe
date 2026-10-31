@@ -1171,17 +1171,97 @@ textarea {
   font-size: 13px;
 }
 .kos-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: 12px;
+  min-width: 0;
 }
-.kos-gallery img {
+.kos-gallery-main .swiper-slide {
+  aspect-ratio: 16 / 9;
+}
+.kos-gallery-trigger,
+.kos-gallery-thumb {
   display: block;
+  position: relative;
   width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: 100%;
+  padding: 0;
+  border: 0;
   background: #e5e9e5;
+  cursor: zoom-in;
+}
+.kos-gallery-trigger img,
+.kos-gallery-thumb img {
+  object-fit: cover;
+}
+.kos-gallery-thumbs {
+  margin-top: 12px;
+}
+.kos-gallery-thumbs .swiper-slide {
+  height: 88px;
+  opacity: 0.58;
+}
+.kos-gallery-thumbs .swiper-slide-thumb-active {
+  opacity: 1;
+}
+.kos-gallery-thumb {
+  cursor: pointer;
+}
+.kos-gallery-thumb:focus-visible {
+  outline-offset: -3px;
+}
+.kos-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 56px clamp(16px, 5vw, 72px) 48px;
+  background: rgb(20 27 23 / 92%);
+}
+.kos-lightbox-main {
+  width: min(100%, 1200px);
+  height: min(78vh, 760px);
+}
+.kos-lightbox-main .swiper-slide {
+  position: relative;
+}
+.kos-lightbox-main img {
+  object-fit: contain;
+}
+.kos-lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: clamp(16px, 5vw, 72px);
+  z-index: 2;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid rgb(255 255 255 / 60%);
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+}
+.kos-lightbox-close:hover {
+  background: rgb(255 255 255 / 14%);
+}
+.kos-lightbox-count {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  margin: 0;
+  color: var(--white);
+  text-align: center;
+  font-size: 13px;
+}
+@media (max-width: 620px) {
+  .kos-gallery-thumbs .swiper-slide {
+    height: 64px;
+  }
+  .kos-lightbox {
+    padding-inline: 8px;
+  }
+  .kos-lightbox-main {
+    height: 70vh;
+  }
 }
 .kos-no-photos {
   padding: 22px 0;
