@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { KosPhotoGallery } from "@/components/public/kos-photo-gallery";
+import { KosCommunity } from "@/components/public/kos-community";
 import { PublicRetryLink } from "@/components/public/public-retry-link";
 import {
   getPublicKos,
@@ -50,7 +53,7 @@ export default async function KosDetailPage({ params, searchParams }: KosPagePro
     if (error instanceof PublicKosApiError && error.status === 404) notFound();
     return (
       <main className="public-page">
-        <PublicHeader />
+        <PublicHeader isAuthenticated={false} />
         <section className="public-content public-state" role="alert">
           <h1>Detail kos belum dapat dimuat</h1>
           <p>Periksa koneksi layanan lalu coba lagi.</p>
@@ -67,10 +70,11 @@ export default async function KosDetailPage({ params, searchParams }: KosPagePro
   const whatsappNumber = kos.contact?.whatsapp?.replace(/\D/g, "");
   const whatsapp = whatsappNumber ? `https://wa.me/${whatsappNumber}` : undefined;
   const mapLink = safeWebUrl(kos.gmaps_link);
+  const session = await getServerSession(authOptions);
 
   return (
     <main className="public-page">
-      <PublicHeader />
+      <PublicHeader isAuthenticated={Boolean(session?.user?.id)} />
       <article className="public-content kos-detail">
         <Link className="public-back" href="/">Kembali ke daftar kos</Link>
         <p className="public-draft-label">
@@ -131,17 +135,21 @@ export default async function KosDetailPage({ params, searchParams }: KosPagePro
             </div>
           </section>
         )}
+        <KosCommunity kosId={kos.id} />
       </article>
       <footer className="public-footer">CariinKos · Informasi berdasarkan data yang tersedia</footer>
     </main>
   );
 }
 
-function PublicHeader() {
+function PublicHeader({ isAuthenticated }: { isAuthenticated: boolean }) {
   return (
     <header className="public-header">
       <Link className="public-brand" href="/" aria-label="CariinKos, beranda">CariinKos</Link>
-      <Link className="public-login" href="/login">Masuk sebagai pemilik</Link>
+      <nav className="public-header-actions" aria-label="Akun">
+        {isAuthenticated ? <Link className="public-login" href="/favorit">Favorit</Link> : <Link className="public-login" href="/register">Daftar pencari</Link>}
+        <Link className="public-login" href={isAuthenticated ? "/dashboard/profile" : "/login"}>{isAuthenticated ? "Profil" : "Masuk"}</Link>
+      </nav>
     </header>
   );
 }

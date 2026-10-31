@@ -3,15 +3,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { getApiBaseUrl } from "@/lib/auth";
 
 const allowed = [
-    /^kos$/,
-    /^kos\/[0-9a-f-]+$/i,
+    /^users$/,
+    /^users\/profile$/,
+    /^users\/[0-9a-f-]+\/status$/i,
     /^public\/kos$/,
     /^public\/kos\/[0-9a-f-]+$/i,
+    /^public\/kos\/[0-9a-f-]+\/reviews$/i,
+    /^kos$/,
+    /^kos\/[0-9a-f-]+$/i,
     /^kos\/[0-9a-f-]+\/facilities$/i,
     /^kos\/[0-9a-f-]+\/facilities\/[0-9a-f-]+$/i,
     /^kos\/[0-9a-f-]+\/photos$/i,
     /^kos\/[0-9a-f-]+\/photos\/[0-9a-f-]+$/i,
     /^kos\/[0-9a-f-]+\/contacts$/i,
+    /^kos\/[0-9a-f-]+\/review\/[0-9a-f-]+$/i,
+    /^kos\/[0-9a-f-]+\/reviews$/i,
+    /^kos\/[0-9a-f-]+\/favorite$/i,
+    /^favorites$/,
     /^facilities$/,
     /^facilities\/[0-9a-f-]+$/i,
 ];
@@ -22,14 +30,6 @@ async function forward(
     request: NextRequest,
     context: { params: Promise<{ path: string[] }> },
 ) {
-    const token = await getToken({
-        req: request,
-        secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
-    });
-    const backendToken = token?.backendToken;
-    if (!backendToken) {
-        return NextResponse.json({ message: "Sesi tidak valid" }, { status: 401 });
-    }
     if (!methods.has(request.method)) {
         return NextResponse.json(
             { message: "Method tidak didukung" },
@@ -57,13 +57,26 @@ async function forward(
         );
     }
 
+    const isPublic = resourcePath.startsWith("public/");
+    const token = isPublic
+        ? null
+        : await getToken({
+            req: request,
+            secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
+        });
+    const backendToken = token?.backendToken;
+    if (!isPublic && !backendToken) {
+        return NextResponse.json({ message: "Sesi tidak valid" }, { status: 401 });
+    }
+
     const target = new URL(
         `${getApiBaseUrl()}/${path.map(encodeURIComponent).join("/")}`,
     );
     request.nextUrl.searchParams.forEach((value, key) =>
         target.searchParams.append(key, value),
     );
-    const headers = new Headers({ Authorization: `Bearer ${backendToken}` });
+    const headers = new Headers();
+    if (backendToken) headers.set("Authorization", `Bearer ${backendToken}`);
     const contentType = request.headers.get("content-type");
     if (contentType) headers.set("Content-Type", contentType);
     const body =

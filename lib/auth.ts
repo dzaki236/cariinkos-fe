@@ -7,6 +7,7 @@ type BackendLoginResponse = {
         id: string;
         name: string;
         email: string;
+        role: "owner" | "user";
     };
 };
 
@@ -42,6 +43,7 @@ export const authOptions: NextAuthOptions = {
                     id: payload.user.id,
                     name: payload.user.name,
                     email: payload.user.email,
+                    role: payload.user.role,
                     backendToken: payload.token,
                 };
             },
@@ -52,12 +54,14 @@ export const authOptions: NextAuthOptions = {
             if (user && "backendToken" in user) {
                 token.backendToken = user.backendToken;
                 token.userId = user.id;
+                token.role = user.role;
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user) {
                 session.user.id = String(token.userId ?? token.sub ?? "");
+                session.user.role = token.role;
             }
             return session;
         },
@@ -71,4 +75,28 @@ export function getApiBaseUrl() {
         throw new Error("API_BASE_URL belum dikonfigurasi");
     }
     return apiBaseUrl.replace(/\/$/, "");
+}
+
+export async function registerUser(input: {
+    name: string;
+    email: string;
+    password: string;
+}) {
+    const response = await fetch(`${getApiBaseUrl()}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(input),
+        cache: "no-store",
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        const error = new Error(payload.message ?? "Pendaftaran gagal") as Error & {
+            status?: number;
+            fields?: Record<string, string[]>;
+        };
+        error.status = response.status;
+        error.fields = payload.errors;
+        throw error;
+    }
+    return payload;
 }

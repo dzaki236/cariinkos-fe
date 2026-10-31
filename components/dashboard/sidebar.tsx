@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const links = [
   { href: "/dashboard", label: "Ringkasan", mark: "01" },
   { href: "/dashboard/kos", label: "Data kos", mark: "02" },
   { href: "/dashboard/fasilitas", label: "Fasilitas", mark: "03" },
+  { href: "/dashboard/users", label: "Pengguna", mark: "04" },
+  { href: "/dashboard/profile", label: "Profil", mark: "05" },
 ];
 
 export function Sidebar({
@@ -17,6 +20,10 @@ export function Sidebar({
   onNavigate: () => void;
 }) {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const visibleLinks = links.filter(
+    (link) => link.href !== "/dashboard/users" || session?.user?.role === "owner",
+  );
   return (
     <>
       {open && (
@@ -29,7 +36,7 @@ export function Sidebar({
       <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>
         <p className="sidebar-label">MENU UTAMA</p>
         <nav aria-label="Navigasi dashboard">
-          {links.map((link) => {
+          {visibleLinks.map((link) => {
             const active =
               link.href === "/dashboard"
                 ? pathname === link.href
