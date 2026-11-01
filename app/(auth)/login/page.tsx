@@ -78,7 +78,7 @@ export default function LoginPage() {
         </form>
       </section>
       <aside className="login-aside">
-        <span className="aside-kicker">KHUSUS PEMILIK</span>
+        <span className="aside-kicker">KHUSUS PENGGUNA LOGIN</span>
         <p>Tempat data kos Anda tetap tertata.</p>
       </aside>
     </main>
