@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   });
   if (!token?.backendToken) return NextResponse.json({ ok: true });
   try {
-    await fetch(`${getApiBaseUrl()}/logout`, {
+    await fetch(`${getApiBaseUrl()}/users/logout`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token.backendToken}` },
       cache: "no-store",

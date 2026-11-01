@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
             async authorize(credentials) {
                 if (!credentials?.email || !credentials.password) return null;
 
-                const response = await fetch(`${getApiBaseUrl()}/login`, {
+                const response = await fetch(`${getApiBaseUrl()}/users/login`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -82,7 +82,7 @@ export async function registerUser(input: {
     email: string;
     password: string;
 }) {
-    const response = await fetch(`${getApiBaseUrl()}/register`, {
+    const response = await fetch(`${getApiBaseUrl()}/users/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(input),
