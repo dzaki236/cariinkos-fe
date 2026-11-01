@@ -17,6 +17,7 @@ export type PublicKos = {
     type: "mixed" | "man" | "woman";
     status: "draft" | "published" | "archived";
     cover_photo?: string | null;
+    rattings?: number | null;
     facilities?: Array<{ id: string; name: string; icon?: string | null }>;
     photos?: Array<{ id: string; image_url: string; public_id?: string | null }>;
     contact?: {

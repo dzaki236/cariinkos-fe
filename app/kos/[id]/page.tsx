@@ -5,7 +5,9 @@ import { authOptions } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { KosPhotoGallery } from "@/components/public/kos-photo-gallery";
 import { KosCommunity } from "@/components/public/kos-community";
+import { StarRating } from "@/components/public/star-rating";
 import { PublicRetryLink } from "@/components/public/public-retry-link";
+import { UserLogoutButton } from "@/components/public/user-logout-button";
 import {
   getPublicKos,
   PublicKosApiError,
@@ -74,7 +76,7 @@ export default async function KosDetailPage({ params, searchParams }: KosPagePro
 
   return (
     <main className="public-page">
-      <PublicHeader isAuthenticated={Boolean(session?.user?.id)} />
+      <PublicHeader isAuthenticated={Boolean(session?.user?.id)} isUser={session?.user?.role === "user"} />
       <article className="public-content kos-detail">
         <Link className="public-back" href="/">Kembali ke daftar kos</Link>
         <p className="public-draft-label">
@@ -84,6 +86,12 @@ export default async function KosDetailPage({ params, searchParams }: KosPagePro
           <div>
             <h1>{kos.name}</h1>
             <p className="kos-detail-location">{address}</p>
+            {kos.rattings != null && kos.rattings > 0 ? (
+              <div className="kos-detail-rating">
+                <StarRating value={kos.rattings} />
+                <span>{kos.rattings.toLocaleString("id-ID", { maximumFractionDigits: 1 })} dari 5</span>
+              </div>
+            ) : null}
           </div>
           <p className="kos-detail-price">
             <strong>{rupiah.format(kos.price_monthly)}</strong>
@@ -142,13 +150,14 @@ export default async function KosDetailPage({ params, searchParams }: KosPagePro
   );
 }
 
-function PublicHeader({ isAuthenticated }: { isAuthenticated: boolean }) {
+function PublicHeader({ isAuthenticated, isUser }: { isAuthenticated: boolean; isUser?: boolean }) {
   return (
     <header className="public-header">
       <Link className="public-brand" href="/" aria-label="CariinKos, beranda">CariinKos</Link>
       <nav className="public-header-actions" aria-label="Akun">
         {isAuthenticated ? <Link className="public-login" href="/favorit">Favorit</Link> : <Link className="public-login" href="/register">Daftar pencari</Link>}
         <Link className="public-login" href={isAuthenticated ? "/dashboard/profile" : "/login"}>{isAuthenticated ? "Profil" : "Masuk"}</Link>
+        {isUser ? <UserLogoutButton /> : null}
       </nav>
     </header>
   );

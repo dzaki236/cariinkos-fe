@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { useSession } from "next-auth/react";
 import { appToast } from "@/components/ui/app-toast";
 import { apiRequest } from "@/lib/query-client";
+import { UserLogoutButton } from "@/components/public/user-logout-button";
 
 export default function UserProfilePage() {
   const { data: session, update } = useSession();
@@ -49,7 +50,7 @@ export default function UserProfilePage() {
     <main className="public-page">
       <header className="public-header">
         <Link className="public-brand" href="/user">CariinKos</Link>
-        <Link className="public-login" href="/favorit">Favorit</Link>
+        <nav className="public-header-actions" aria-label="Navigasi akun"><Link className="public-login" href="/favorit">Favorit</Link><UserLogoutButton /></nav>
       </header>
       <section className="public-content" aria-labelledby="profile-heading">
         <Link className="public-back" href="/user">Kembali ke akun</Link>

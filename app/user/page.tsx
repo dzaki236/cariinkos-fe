@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
+import { UserLogoutButton } from "@/components/public/user-logout-button";
 
 export default async function UserHomePage() {
   const session = await getServerSession(authOptions);
@@ -15,6 +16,7 @@ export default async function UserHomePage() {
         <nav className="public-header-actions" aria-label="Navigasi akun">
           <Link className="public-login" href="/favorit">Favorit</Link>
           <Link className="public-login" href="/user/profile">Profil</Link>
+          <UserLogoutButton />
         </nav>
       </header>
       <section className="public-content" aria-labelledby="user-home-heading">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { apiRequest } from "@/lib/query-client";
+import { UserLogoutButton } from "@/components/public/user-logout-button";
 
 type Favorite = {
   id: string;
@@ -57,7 +58,7 @@ export function FavoritesContent() {
 
   return (
     <main className="public-page">
-      <header className="public-header"><Link className="public-brand" href={status === "authenticated" ? "/user" : "/"}>CariinKos</Link><Link className="public-login" href={status === "authenticated" ? "/user/profile" : "/login"}>Profil</Link></header>
+      <header className="public-header"><Link className="public-brand" href={status === "authenticated" ? "/user" : "/"}>CariinKos</Link>{status === "authenticated" ? <nav className="public-header-actions" aria-label="Navigasi akun"><Link className="public-login" href="/user/profile">Profil</Link><UserLogoutButton /></nav> : <Link className="public-login" href="/login">Profil</Link>}</header>
       <section className="public-content">
         <Link className="public-back" href="/">Kembali ke daftar kos</Link>
         <h1>Kos favorit</h1>
@@ -68,7 +69,6 @@ export function FavoritesContent() {
             {favorites.map((favorite) => <li className="kos-list-item" key={favorite.id}>
               <article>
                 <Link className="kos-list-link" href={`/kos/${encodeURIComponent(favorite.kos_id)}`}>
-                  {favorite.kos?.cover_photo ? <Image className="kos-cover" src={favorite.kos.cover_photo} alt={`Foto kos ${favorite.kos.name}`} width={320} height={220} unoptimized /> : <span className="kos-cover-missing">Foto tidak tersedia</span>}
                   <span className="kos-list-copy"><strong className="kos-list-name">{favorite.kos?.name ?? "Kos tersimpan"}</strong><span className="kos-list-location">{[favorite.kos?.district, favorite.kos?.city].filter(Boolean).join(", ")}</span></span>
                 </Link>
                 <label>Catatan<input value={notes[favorite.id] ?? favorite.note ?? ""} onChange={(event) => setNotes((current) => ({ ...current, [favorite.id]: event.target.value }))} maxLength={2000} /></label>
