@@ -86,12 +86,13 @@ export default async function KosDetailPage({ params, searchParams }: KosPagePro
           <div>
             <h1>{kos.name}</h1>
             <p className="kos-detail-location">{address}</p>
-            {kos.rattings != null && kos.rattings > 0 ? (
-              <div className="kos-detail-rating">
-                <StarRating value={kos.rattings} />
-                <span>{kos.rattings.toLocaleString("id-ID", { maximumFractionDigits: 1 })} dari 5</span>
-              </div>
-            ) : null}
+            <div className="kos-detail-rating">
+              <StarRating value={kos.rattings ?? 0} />
+              <span>{(kos.rattings ?? 0).toLocaleString("id-ID", { maximumFractionDigits: 1 })}/5</span>
+              <span aria-label={`${kos.favorite_count ?? 0} favorit`}>
+                {kos.favorite_count ?? 0} favorit
+              </span>
+            </div>
           </div>
           <p className="kos-detail-price">
             <strong>{rupiah.format(kos.price_monthly)}</strong>

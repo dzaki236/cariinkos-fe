@@ -38,12 +38,13 @@ export function KosListing({ response }: { response: PublicKosListResponse }) {
                 <span className="kos-list-location">
                   {[kos.district, kos.city, kos.province].filter(Boolean).join(", ")}
                 </span>
-                {kos.rattings != null && kos.rattings > 0 ? (
-                  <span className="kos-list-rating">
-                    <StarRating value={kos.rattings} />
-                    <span>{kos.rattings.toLocaleString("id-ID", { maximumFractionDigits: 1 })}</span>
-                  </span>
-                ) : null}
+                <span className="kos-list-rating">
+                  <StarRating value={kos.rattings ?? 0} />
+                  <span>{(kos.rattings ?? 0).toLocaleString("id-ID", { maximumFractionDigits: 1 })}/5</span>
+                </span>
+                <span className="kos-list-availability">
+                  {kos.favorite_count ?? 0} favorit
+                </span>
                 <span className="kos-list-price">{rupiah.format(kos.price_monthly)} / bulan</span>
                 <span className="kos-list-availability">
                   {kos.available_rooms} kamar tersedia

@@ -18,6 +18,7 @@ export type PublicKos = {
     status: "draft" | "published" | "archived";
     cover_photo?: string | null;
     rattings?: number | null;
+    favorite_count?: number;
     facilities?: Array<{ id: string; name: string; icon?: string | null }>;
     photos?: Array<{ id: string; image_url: string; public_id?: string | null }>;
     contact?: {
