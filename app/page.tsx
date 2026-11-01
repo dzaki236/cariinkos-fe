@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { connection } from "next/server";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { authOptions, getRoleHome } from "@/lib/auth";
 import { KosListing } from "@/components/public/kos-listing";
 import { PublicRetryLink } from "@/components/public/public-retry-link";
 import { getPublicKosList, PublicKosApiError } from "@/lib/public-kos-api";
@@ -24,6 +25,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const requestedPage = Array.isArray(params.page) ? params.page[0] : params.page;
   const retryKey = Array.isArray(params.retry) ? params.retry[0] : params.retry;
   const session = await getServerSession(authOptions);
+  if (session?.user?.id) redirect(getRoleHome(session.user.role));
   const parsedPage = Number(requestedPage ?? "1");
   const page = Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
@@ -45,8 +47,9 @@ export default async function Home({ searchParams }: HomeProps) {
           CariinKos
         </Link>
         <nav className="public-header-actions" aria-label="Akun">
-          {session?.user?.id ? <Link className="public-login" href="/favorit">Favorit</Link> : <Link className="public-login" href="/register">Daftar pencari</Link>}
-          <Link className="public-login" href={session?.user?.id ? "/dashboard/profile" : "/login"}>{session?.user?.id ? "Profil" : "Masuk"}</Link>
+          {session?.user?.id && session.user.role === "user" ? <Link className="public-login" href="/favorit">Favorit</Link> : null}
+          <Link className="public-login" href={session?.user?.id ? getRoleHome(session.user.role) : "/register"}>{session?.user?.id ? "Akun saya" : "Daftar pencari"}</Link>
+          {!session?.user?.id ? <Link className="public-login" href="/login">Masuk</Link> : null}
         </nav>
       </header>
 

@@ -68,9 +68,17 @@ export const authOptions: NextAuthOptions = {
     },
     pages: { signIn: "/login" },
 };
+const DEFAULT_API_BASE_URL = "http://localhost:3000/api/v1";
+
+export function getRoleHome(role: string | undefined) {
+    return role === "owner" ? "/dashboard" : "/user";
+}
 
 export function getApiBaseUrl() {
-    const apiBaseUrl = process.env.API_BASE_URL;
+    const apiBaseUrl = (
+        process.env.API_BASE_URL ||
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        DEFAULT_API_BASE_URL);
     if (!apiBaseUrl) {
         throw new Error("API_BASE_URL belum dikonfigurasi");
     }

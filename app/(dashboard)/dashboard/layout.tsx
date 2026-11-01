@@ -27,5 +27,6 @@ async function AuthenticatedDashboard({
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect("/login");
+  if (session.user.role !== "owner") redirect("/user");
   return <DashboardShell>{children}</DashboardShell>;
 }

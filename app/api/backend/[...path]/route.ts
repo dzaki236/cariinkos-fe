@@ -4,6 +4,7 @@ import { getApiBaseUrl } from "@/lib/auth";
 
 const allowed = [
     /^users$/,
+    /^users\/register$/,
     /^users\/profile$/,
     /^users\/[0-9a-f-]+\/status$/i,
     /^public\/kos$/,

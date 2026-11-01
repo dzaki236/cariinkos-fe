@@ -4,16 +4,17 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { appToast } from "@/components/ui/app-toast";
+import { getRoleHome } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
   useEffect(() => {
-    if (status === "authenticated") router.replace("/dashboard");
-  }, [router, status]);
+    if (status === "authenticated") router.replace(getRoleHome(session?.user?.role));
+  }, [router, session?.user?.role, status]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -28,7 +29,7 @@ export default function LoginPage() {
       });
       if (result?.ok) {
         appToast.success("Berhasil masuk");
-        router.push("/dashboard");
+        router.push("/");
       } else {
         const message = "Email atau kata sandi tidak valid.";
         setError(message);
