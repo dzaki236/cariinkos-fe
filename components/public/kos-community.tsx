@@ -148,22 +148,6 @@ export function KosCommunity({ kosId }: { kosId: string }) {
                 {favorite ? "Hapus dari favorit" : "Simpan ke favorit"}
               </button>
               {favorite && <button className="public-action" type="button" onClick={saveFavoriteNote} disabled={pending}>Simpan catatan</button>}
-              <form className="form-stack" onSubmit={submitReview}>
-                <fieldset className="star-rating-fieldset">
-                  <legend>Penilaian</legend>
-                  <div className="star-rating-control">
-                    <StarRating value={Number(rating)} interactive onChange={(value) => setRating(String(value))} label="Pilih rating dari 1 sampai 5 bintang" />
-                    <span>{rating} dari 5</span>
-                  </div>
-                </fieldset>
-                <label>Ulasan
-                  <textarea value={comment || review?.comment || ""} onChange={(event) => setComment(event.target.value)} maxLength={2000} required rows={4} />
-                </label>
-                <div className="kos-community-buttons">
-                  <button className="public-action" type="submit" disabled={pending}>{review ? "Perbarui ulasan" : "Kirim ulasan"}</button>
-                  {review && <button className="public-action" type="button" onClick={deleteReview} disabled={pending}>Hapus ulasan</button>}
-                </div>
-              </form>
             </div>
           ) : status === "authenticated" ? (
             <p>Ulasan dan favorit tersedia untuk akun pencari kos.</p>
@@ -172,22 +156,42 @@ export function KosCommunity({ kosId }: { kosId: string }) {
           )}
           {message && <p role="status" aria-live="polite">{message}</p>}
         </div>
-        <div className="kos-community-reviews">
-          <h3>Ulasan terbaru</h3>
-          {reviews.length ? (
-            <ul className="kos-review-list">
-              {reviews.map((item) => (
-                <li key={item.id}>
-                  <div className="kos-review-meta">
-                    <strong>{item.user?.name ?? "Pencari kos"}</strong>
-                    <StarRating value={item.rating} label={`Rating ${item.rating} dari 5 bintang`} />
-                  </div>
-                  <p>{item.comment}</p>
-                  <time dateTime={item.created_at}>{new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(new Date(item.created_at))}</time>
-                </li>
-              ))}
-            </ul>
-          ) : <p>Belum ada ulasan untuk kos ini.</p>}
+        <div className="kos-community-review-column">
+          {status === "authenticated" && session?.user?.role === "user" && (
+            <form className="form-stack kos-community-actions" onSubmit={submitReview}>
+              <fieldset className="star-rating-fieldset">
+                <legend>Penilaian</legend>
+                <div className="star-rating-control">
+                  <StarRating value={Number(rating)} interactive onChange={(value) => setRating(String(value))} label="Pilih rating dari 1 sampai 5 bintang" />
+                  <span>{rating} dari 5</span>
+                </div>
+              </fieldset>
+              <label>Ulasan
+                <textarea value={comment || review?.comment || ""} onChange={(event) => setComment(event.target.value)} maxLength={2000} required rows={4} />
+              </label>
+              <div className="kos-community-buttons">
+                <button className="public-action" type="submit" disabled={pending}>{review ? "Perbarui ulasan" : "Kirim ulasan"}</button>
+                {review && <button className="public-action" type="button" onClick={deleteReview} disabled={pending}>Hapus ulasan</button>}
+              </div>
+            </form>
+          )}
+          <div className="kos-community-reviews">
+            <h3>Ulasan terbaru</h3>
+            {reviews.length ? (
+              <ul className="kos-review-list">
+                {reviews.map((item) => (
+                  <li key={item.id}>
+                    <div className="kos-review-meta">
+                      <strong>{item.user?.name ?? "Pencari kos"}</strong>
+                      <StarRating value={item.rating} label={`Rating ${item.rating} dari 5 bintang`} />
+                    </div>
+                    <p>{item.comment}</p>
+                    <time dateTime={item.created_at}>{new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(new Date(item.created_at))}</time>
+                  </li>
+                ))}
+              </ul>
+            ) : <p>Belum ada ulasan untuk kos ini.</p>}
+          </div>
         </div>
       </div>
     </section>
