@@ -80,7 +80,7 @@ export default async function KosDetailPage({ params, searchParams }: KosPagePro
       <article className="public-content kos-detail">
         <Link className="public-back" href="/">Kembali ke daftar kos</Link>
         <p className="public-draft-label">
-          Draft without direction · ENERGY 1 / RHYTHM 1 / MOTION 1
+          <hr/>
         </p>
         <header className="kos-detail-heading">
           <div>

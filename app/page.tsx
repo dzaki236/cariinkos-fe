@@ -56,7 +56,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="public-content" aria-labelledby="listing-title">
         <div className="public-heading">
           <p className="public-draft-label">
-            Draft without direction · ENERGY 1 / RHYTHM 1 / MOTION 1
+            <hr/>
           </p>
           <h1 id="listing-title">Daftar kos</h1>
           <p className="public-intro">
